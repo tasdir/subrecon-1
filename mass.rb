@@ -23,6 +23,7 @@ end
   puts
   puts "Collecting By Asset-finder Done and Save As assetfinder_#{domain}.txt!"
   puts
+  puts "Collecting By Crt.sh done!"
   puts "-===================|| SubDomains By Crt.sh ||====================-"
   system("curl -s 'https://crt.sh/?q=%.#{domain}&output=json' | jq -r '.[].name_value' | sed 's/\*\.//g' |sort -u > crt_#{domain}.txt")
   puts
@@ -71,7 +72,11 @@ end
   system("amass enum -passive -d #{domain} > amass_#{domain}.txt")
   puts
   puts "Collecting By Amass Done!"
+  puts
+  puts "-===================|| SubDomains By archive.org ||====================-"
+  system("curl -s "http://web.archive.org/cdx/search/cdx?url=*.{domain}/*&output=text&fl=original&collapse=urlkey" | sed -e 's_https*://__' -e "s/\/.*//" | sort -u > archive_#{domain}.txt")
+  puts
   system("chaos -d #{domain} -silent -o chaos_#{domain}.txt")
-  system("cat chaos_#{domain}.txt amass_#{domain}.txt assetfinder_#{domain}.txt SubDomainizer_#{domain}.txt ctfr_#{domain}.txt githubsearch_#{domain}.txt certspot_#{domain}.txt crt_#{domain}.txt findomain_#{domain}.txt subfinder_#{domain}.txt sublist3r_#{domain}.txt > #{domain}.txt ")
-  system("rm chaos_#{domain}.txt amass_#{domain}.txt assetfinder_#{domain}.txt SubDomainizer_#{domain}.txt ctfr_#{domain}.txt githubsearch_#{domain}.txt certspot_#{domain}.txt crt_#{domain}.txt findomain_#{domain}.txt subfinder_#{domain}.txt sublist3r_#{domain}.txt ")
+  system("cat chaos_#{domain}.txt amass_#{domain}.txt assetfinder_#{domain}.txt SubDomainizer_#{domain}.txt ctfr_#{domain}.txt githubsearch_#{domain}.txt certspot_#{domain}.txt crt_#{domain}.txt findomain_#{domain}.txt subfinder_#{domain}.txt sublist3r_#{domain}.txt archive_#{domain}.txt > #{domain}.txt ")
+  system("rm chaos_#{domain}.txt amass_#{domain}.txt assetfinder_#{domain}.txt SubDomainizer_#{domain}.txt ctfr_#{domain}.txt githubsearch_#{domain}.txt certspot_#{domain}.txt crt_#{domain}.txt findomain_#{domain}.txt subfinder_#{domain}.txt sublist3r_#{domain}.txt archive_#{domain}.txt ")
 
